@@ -5,6 +5,12 @@ A = [1, 2, 3, 4, 5]
 N = 5
 
 # ------------------------------
+# 추가 기능: True/False → 참/거짓 변환
+# ------------------------------
+def tf_to_kor(val):
+    return "참" if val else "거짓"
+
+# ------------------------------
 # 1. 관계행렬 입력
 # ------------------------------
 def read_matrix():
@@ -38,6 +44,19 @@ def is_transitive(R):
 def equivalence_class(R, x):
     idx = x - 1
     return [A[j] for j in range(N) if R[idx][j] == 1]
+
+# ------------------------------
+# 추가 기능 2: 동치류를 분할 구조로 변환하여 출력
+# ------------------------------
+def equivalence_partition(R):
+    visited = set()
+    parts = []
+    for x in A:
+        if x not in visited:
+            eq = equivalence_class(R, x)
+            parts.append(eq)
+            visited.update(eq)
+    return parts
 
 # ------------------------------
 # 4. 폐포 생성 (Reflexive / Symmetric / Transitive)
@@ -87,9 +106,9 @@ def main():
     symm = is_symmetric(R)
     trans = is_transitive(R)
 
-    print(f"반사적: {refl}")
-    print(f"대칭적: {symm}")
-    print(f"추이적: {trans}")
+    print(f"반사적: {tf_to_kor(refl)}")
+    print(f"대칭적: {tf_to_kor(symm)}")
+    print(f"추이적: {tf_to_kor(trans)}")
 
     # 동치 여부
     if refl and symm and trans:
@@ -97,6 +116,12 @@ def main():
         print("[동치류]")
         for x in A:
             print(f"E({x}) = {equivalence_class(R, x)}")
+
+        # 추가 기능: 동치류 분할 형태 출력
+        print("\n[동치류 분할(partition) 출력 - 추가 기능]")
+        parts = equivalence_partition(R)
+        print(parts)
+
     else:
         print("\n→ 이 관계는 동치 관계가 아닙니다.\n")
 
@@ -128,11 +153,19 @@ def main():
     symm2 = is_symmetric(R_final)
     trans2 = is_transitive(R_final)
 
+    print(f"반사적: {tf_to_kor(refl2)}")
+    print(f"대칭적: {tf_to_kor(symm2)}")
+    print(f"추이적: {tf_to_kor(trans2)}")
+
     if refl2 and symm2 and trans2:
         print("→ 폐포 적용 후: 동치 관계입니다.\n")
         print("[동치류]")
         for x in A:
             print(f"E({x}) = {equivalence_class(R_final, x)}")
+
+        print("\n[최종 동치류 분할(partition) - 추가 기능]")
+        print(equivalence_partition(R_final))
+
     else:
         print("→ 폐포 적용 후에도 동치 관계가 아님.")
 
